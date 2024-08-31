@@ -1,0 +1,349 @@
+
+
+
+@foreach($data['workingJobportal'] as $work)
+
+
+<div class="row">
+    <div class="col-sm-5">
+        <div class="form-group">
+          <label for="email">Company Name:</label>
+
+          <input type="text" class="form-control " value="{{ DB::table('subsidiaries')->where('subsidiaries_id',$work->profile_job_work_sbu)->value('subsidiaries_name') }}" id="email" disabled>
+        </div>
+</div>
+
+  <div class="col-sm-3">
+      <div class="form-group">
+        <label for="email">Department:</label>
+        <input type="text" class="form-control " value="{{ DB::table('departments')->where('department_id',$work->profile_job_work_department)->value('department_name') }}" id="email" disabled>
+      </div>
+  </div>
+
+
+  <div class="col-sm-4">
+    <div class="form-group">
+      <label for="email">Designation:</label>
+      <input type="text" class="form-control " value="{{ DB::table('designations')->where('designations_id',$work->profile_job_work_designation)->value('designations_name') }}" id="email" disabled>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="row">
+    <div class="col-sm-3">
+      <div class="form-group">
+      <label for="email">Joined Date:</label>
+      <input type="text" class="form-control " value="{{ $work->profile_job_work_join_date}}" id="email" disabled>
+      </div>
+    </div>
+
+<div class="col-sm-3">
+  <div class="form-group">
+    <label for="email">Job Description:</label></br>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#jds">
+      {{ DB::table('job_descriptions')->where('job_descriptions_id',$work->profile_job_work_jd)->value('job_descriptions_name') }}
+    </button>
+  </div>
+</div>
+
+
+<div class="col">
+<div class="form-group">
+  <label for="email">ETF Number:</label>
+  <input type="text" class="form-control " value="{{ $work->profile_job_work_epf_number}}" id="email" disabled>
+</div>
+</div>
+
+
+
+<div class="col">
+  <div class="form-group">
+    <label for="email">Office Location:</label>
+    <input type="text" class="form-control " value=" {{ DB::table('office_locations')->where('office_locations_id',$work->profile_job_work_office_location)->value('office_locations_name') }}" id="email" disabled>
+</div>
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="col-sm-5">
+<div class="form-group">
+<label for="email">Mobile Number:</label>
+<input type="text" class="form-control " value="{{ $work->profile_job_work_mobile}}" id="email" disabled>
+</div>
+</div>
+
+<div class="col-sm-5">
+<div class="form-group">
+<label for="email">Email Address:</label>
+<input type="text" class="form-control " value="{{ $work->profile_job_work_email}}" id="email" disabled>
+</div>
+</div>
+
+
+<div class="col-sm-5">
+<div class="form-group">
+<label for="email">Reporting Manager:</label>
+<input type="text" class="form-control "  value="{{ DB::table('profiles')->where('profile_id',$work->profile_job_work_head_of_sbu)->value('profile_Full_name') }}" id="" disabled>
+</div>
+</div>
+
+<div class="col-sm-5">
+<div class="form-group">
+<label for="email">Duration worked:</label>
+<input type="text" class="form-control " value="" id="timeofwork" disabled>
+</div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+<div class="form-group">
+@if(!empty(Auth::user()->hrAdmin) OR !empty(Auth::user()->hr))
+<button type="button" class="btn btn-success col-5 mb-3" class="btn btn-primary" data-toggle="modal" data-target="#editWorkcompanidetails{{$work->job_working_profile_id}}"><i class="bi bi-pencil-square" data-toggle="modal" data-target="#editWorkcompanidetails{{$work->job_working_profile_id}}"> Edit Details </i></button>
+@endif
+</div>
+</div>
+</div>
+
+
+
+<hr class="text-success"></hr>
+
+<!----- edit working sbu details --------!----->
+
+<div class="modal fade" id="editWorkcompanidetails{{$work->job_working_profile_id}}">
+  <div class="modal-dialog modal-xl">
+  <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+      <h4 class="modal-title">Edit Working Company Details </h4>
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+          <form action="/jobworkupdate" method="post">
+              @csrf
+
+
+              <div class="row">
+                <div class="col-sm-5">
+
+                    <div class="form-group">
+                    <label for="email">Subsidiaries: </label></br>
+                    <select class="form-control  @error('profile_job_work_sbu') is-invalid @enderror profile_job_work_sbu" name="profile_job_work_sbu" required style="width: 400px" >
+                        <option value="{{$work->profile_job_work_sbu}}">{{ DB::table('subsidiaries')->where('subsidiaries_id',$work->profile_job_work_sbu)->value('subsidiaries_name') }}</option>
+
+                        @foreach ($data['subsidiaries'] as $subsidiaries)
+                        <option value="{{$subsidiaries->subsidiaries_id}}">{{$subsidiaries->subsidiaries_name}}</option>
+                        @endforeach
+
+                    </select>
+                    @error('profile_job_work_sbu')<div class="text-danger">{{ $message }}</div> @enderror
+                </div>
+                </div>
+
+
+                <div class="col-sm-5">
+                    <div class="form-group">
+                    <label for="email">Designation:</label></br>
+                    <select class="custom-select  @error('profile_job_work_designation') is-invalid @enderror profile_job_work_designation" name="profile_job_work_designation" required style="width: 400px">
+                        <option value="{{$work->profile_job_work_designation}}">{{ DB::table('designations')->where('designations_id',$work->profile_job_work_designation)->value('designations_name') }}</option>
+                        @foreach ($data['designations'] as $designations)
+                        <option value="{{$designations->designations_id}}">{{$designations->designations_name}}</option>
+                        @endforeach
+                    </select>
+                    @error('profile_job_work_designation')<div class="text-danger">{{ $message }}</div> @enderror
+                </div>
+                </div>
+
+              </div>
+
+
+
+          <div class="row">
+
+            <div class="col-sm-5">
+              <div class="form-group">
+              <label for="email">Department:</label></br>
+              <select class="custom-select  @error('profile_job_work_department') is-invalid @enderror profile_job_work_department" name="profile_job_work_department" required  style="width: 400px">
+                  <option value="{{$work->profile_job_work_department}}">{{ DB::table('departments')->where('department_id',$work->profile_job_work_department)->value('department_name') }}</option>
+                  @foreach ($data['departments'] as $departments)
+                  <option value="{{$departments->department_id}}">{{$departments->department_name}}</option>
+                  @endforeach
+              </select>
+              @error('profile_job_work_department')<div class="text-danger">{{ $message }}</div> @enderror
+          </div>
+          </div>
+
+
+
+              <div class="col-sm-5">
+                  <div class="form-group">
+                  <label for="email">Job Description:</label>
+                  <select class="custom-select  @error('profile_job_work_jd') is-invalid @enderror profile_job_work_jd" name="profile_job_work_jd" required style="width: 400px">
+                      <option value="{{$work->profile_job_work_jd}}">{{ DB::table('job_descriptions')->where('job_descriptions_id',$work->profile_job_work_jd)->value('job_descriptions_name') }}</option>
+                      @foreach ($data['job_descriptions'] as $job_descriptions)
+                      <option value="{{$job_descriptions->job_descriptions_id}}">{{$job_descriptions->job_descriptions_name}}</option>
+                      @endforeach
+                  </select>
+                  @error('profile_job_work_jd')<div class="text-danger">{{ $message }}</div> @enderror
+              </div>
+              </div>
+
+          </div>
+
+
+          <div class="row ">
+              <div class="col-sm-5">
+                  <div class="form-group">
+                  <label for="email">Office Location:</label>
+                  <select class="custom-select  @error('profile_job_work_office_location') is-invalid @enderror profile_job_work_office_location" name="profile_job_work_office_location" required style="width: 400px">
+                      <option value="{{$work->profile_job_work_office_location}}">{{ DB::table('office_locations')->where('office_locations_id',$work->profile_job_work_office_location)->value('office_locations_name') }}</option>
+                      @foreach ($data['office_locations'] as $office_locations)
+                      <option value="{{$office_locations->office_locations_id}}">{{$office_locations->office_locations_name}}</option>
+                      @endforeach
+
+                  </select>
+                  @error('profile_job_work_office_location')<div class="text-danger">{{ $message }}</div> @enderror
+                </div>
+              </div>
+
+
+              <div class="col-sm-5 ">
+                <div class="form-group">
+                <label for="email">Joined Date:</label></br>
+               <input type="date" name="profile_job_work_join_date" class="form-control  @error('profile_job_work_join_date') is-invalid @enderror" value="{{$work->profile_job_work_join_date}}" required>
+               @error('profile_job_work_join_date')<div class="text-danger">{{ $message }}</div> @enderror
+            </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+              <div class="col-sm-3">
+                  <div class="form-group">
+                  <label for="email">EPF Number:</label>
+                  <input type="text" class="form-control  @error('profile_job_work_epf_number') is-invalid @enderror" placeholder="EPF Number" id="email" name="profile_job_work_epf_number" value="{{$work->profile_job_work_epf_number}}" >
+                  @error('profile_job_work_epf_number')<div class="text-danger">{{ $message }}</div> @enderror
+              </div>
+              </div>
+
+              <div class="col-sm-3">
+
+                  <div class="form-group">
+                      <label for="email"> Reporting Manager:</label>
+                      <select class="custom-select  @error('profile_job_work_head_of_sbu') is-invalid @enderror    profile_job_work_head_of_sbu" name="profile_job_work_head_of_sbu" style="width: 400px">
+
+                          <option value="{{$work->profile_job_work_head_of_sbu}}">{{ DB::table('profiles')->where('profile_id',$work->profile_job_work_head_of_sbu)->value('profile_Full_name') }}</option>
+
+                          @foreach ($data['sbu_head'] as $sbu_head)
+                          <option value="{{$sbu_head->profile_id}}">{{$sbu_head->profile_Full_name}}</option>
+                          @endforeach
+                      </select>
+                      @error('profile_job_work_head_of_sbu')<div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+              </div>
+
+
+
+
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4">
+
+                <div class="form-group ">
+                    <label for="email">Head Of SBU:</label>
+                    <select  class="custom-select  @error('profile_head_of_departmrnt_this_account') is-invalid @enderror" name="profile_head_of_departmrnt_this_account" value="{{ old('profile_head_of_departmrnt_this_account') }}" required>
+                        <option value="{{$work->profile_head_of_departmrnt_this_account	}}">{{$work->profile_head_of_departmrnt_this_account	}}</option>
+                        <option value="ON">ON</option>
+                        <option value="NO">NO</option>
+                    </select>
+                    @error('profile_head_of_departmrnt_this_account')<div class="text-danger">{{ $message }}</div> @enderror
+                  </div>
+              </div>
+
+          </div>
+
+          <div class="row">
+
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                      <label for="email">Email Address:</label>
+                      <input type="email" name="profile_job_work_email" class="form-control  @error('profile_job_work_email') is-invalid @enderror" value="{{$work->profile_job_work_email}}"   placeholder="Email">
+                      @error('profile_job_work_email')<div class="text-danger">{{ $message }}</div> @enderror
+
+                    </div>
+              </div>
+
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                      <label for="email">Mobile Number:</label>
+                      <input type="tel" name="profile_job_work_mobile" class="form-control  @error('profile_job_work_mobile') is-invalid @enderror" value="{{$work->profile_job_work_mobile}}" placeholder="Mobile Number" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" >
+                      @error('profile_job_work_mobile')<div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+              </div>
+          </div>
+
+          <div class="row">
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                      <label for="email">Profile Status:</label>
+                      <select  class="custom-select  @error('profile_job_work_status') is-invalid @enderror" name="profile_job_work_status" value="{{ old('profile_job_work_status') }}" required>
+                          <option value="{{$work->profile_job_work_status}}">{{$work->profile_job_work_status}}</option>
+                          <option value="Active">Active</option>
+                          <option value="Deactivate">Deactivate</option>
+                      </select>
+                      @error('profile_job_work_status')<div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+              </div>
+
+              <div class="col">
+                <div class="form-group">
+                      <label for="email">Reason:</label>
+                       <input type="tel" name="profile_job_work_status_reson" class="form-control  @error('profile_job_work_status_reson') is-invalid @enderror" value="{{$work->profile_job_work_status_reson}}"  required >
+                      @error('profile_job_work_status')<div class="text-danger">{{ $message }}</div> @enderror
+                    </div>
+              </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col mt-3">
+             Last Edited  : {{$work->job_work_last_update_by}}  /  {{$work->job_work_last_update_date}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col mb-3">
+             Created  : {{$work->job_work_profile_crate_by}}  /  {{$work->job_work_profile_crate_date}}
+            </div>
+          </div>
+
+          <input type="hidden" value="{{$work->job_working_profile_id}}" name="job_working_profile_id">
+          <input type="hidden" value="{{$work->profile_job_join_profile_id}}" name="profile_job_join_profile_id">
+          <input type="hidden" value="{{$profile[0]->profile_number}}" name="profile_number">
+          <input type="hidden" value="{{$profile[0]->profile_sug}}" name="profile_sug">
+
+          <button type="submit" class="btn btn-success" name="joindetails">Save</button>
+          </form>
+
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      </div>
+  </div>
+  </div>
+
+@endforeach
